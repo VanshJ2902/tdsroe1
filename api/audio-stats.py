@@ -4,7 +4,13 @@ import numpy as np
 
 def handler(request):
     try:
-        body = request.get_json()
+        if request.method != "POST":
+            return {
+                "statusCode": 405,
+                "body": json.dumps({"error": "Method not allowed"})
+            }
+
+        body = json.loads(request.body)
         audio_base64 = body.get("audio_base64", "")
 
         audio_bytes = base64.b64decode(audio_base64)
